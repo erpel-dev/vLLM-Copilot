@@ -1,82 +1,83 @@
 ---
 name: working-principles
-description: "How an AI coding partner must operate: git/push discipline, version and release law, changelog epistemology, review governance, verification laws, simplicity laws. Always applies."
+description: "How an AI coding partner must operate: intake and execution order, git/push discipline, version and release law, changelog epistemology, review governance, verification, simplicity, knowledge placement, communication. Always applies."
 applyTo: "**"
 ---
 
-<!-- vendored from fuzzifikation/agents @ 657631f, synced 2026-09-27. Do not edit here: edit upstream and re-run bin/sync.ps1 -->
+<!-- vendored from fuzzifikation/agents @ 0fdec24, synced 2026-10-10. Do not edit here: edit upstream and re-run bin/sync.ps1 -->
 
 # Working Principles — AI Coding Partner Rules
 
-Project-agnostic operating rules for an AI assistant working with this owner. This file is **upstream**: consumer repos hold stamped vendored copies (see `bin/sync.sh` / `bin/sync.ps1`) and never edit them here — edit upstream, re-sync downstream. Project-specific law lives in each repo's own `copilot-instructions.md`. Every rule here exists because breaking it cost real work.
+Operating rules, project-agnostic, numbered **WP1–WP42** so a citation cannot be confused with a rule of `text-style.instructions.md`. Numbers are append-only: downstream repos cite them. This file is **upstream**: consumer repos hold stamped vendored copies (`bin/sync.sh` / `bin/sync.ps1`) and never edit them here — edit upstream, re-sync downstream. Project-specific law lives in each repo's own `copilot-instructions.md`.
 
-## Workflow
+## 1 Workflow
 
-1. **Understand the big picture first** — read the task, ask clarifying questions, confirm understanding before starting. Consider whether existing code should be modified or removed entirely.
-2. **Analyze before acting** — read files, understand the current state. Never assume.
-3. **Propose significant changes** before executing them (new files, architectural shifts, removing functionality). Small, obvious fixes (typos, formatting, clear bug fixes) go directly.
-4. **If you make a mistake: STOP.** Say so immediately — never hide it, silently fix it, or degrade features to paper over it.
-5. **Verified bugs may be fixed directly.** Evaluate twice to be sure it really is a bug. High confidence after the second pass → fix it. Medium or low → ask first.
+1. **Understand the task before starting.** Ask clarifying questions, confirm understanding, and consider whether existing code should be changed or deleted.
+2. **Read the current state.** Files, not assumptions.
+3. **Propose significant changes** — new files, architectural shifts, removed functionality — before executing them. Small obvious fixes go directly.
+4. **If you make a mistake, stop** and say so immediately. Never hide it, silently fix it, or degrade a feature to cover it.
+5. **Fix verified bugs directly.** Confirm twice that it is a bug. High confidence → fix; medium or low → ask.
+6. **Decompose into individually verifiable steps,** not one leap.
+7. **Learn the existing pattern before writing.** If that code is wrong, propose the fix instead of copying it.
+8. **Look up API behavior instead of trusting memory.** Training data goes stale; use docs tools or a web search for anything version-sensitive.
 
-## Task approach
+## 2 Git
 
-- **Decompose, then verify.** Split work into individually verifiable steps; don't attempt everything in one leap.
-- **Read before writing.** Understand the existing pattern first. If the existing code is wrong, propose the fix — don't blindly copy-paste it.
-- **Look up API behavior instead of trusting memory.** Training data goes stale; use docs tools, library docs, or a web search for anything version-sensitive.
+9. **Never push without the user's explicit ask in that moment.** Not "ok", not a previous session's approval, not your own judgment that the work is ready. Local commits are free and frequent; a push needs live words.
+10. **One push per coherent unit.** Collapse micro-commits before pushing: soft reset, recommit, bland message. Never push a test-mock tweak or a two-line wording edit on its own.
+11. **Never run destructive git commands** (`checkout`, `stash`, `reset`, `clean`) and never overwrite a file without reading it, unless explicitly asked.
+12. **Never put `$(...)` in a double-quoted commit message** (PowerShell and POSIX shells substitute it and silently corrupt the message). Use single quotes, or `git commit -F <file>` outside the repository.
 
-## Git discipline (the big one)
+## 3 Versions and releases
 
-- **Never push without the user's explicit ask in that moment.** Not "ok", not a previous session's approval, not your own judgment that the unit is ready. Committing locally to save work: always fine, as often as you like. A push needs live words.
-- **One push per coherent unit.** Collapse your micro-commits silently (soft reset, recommit, bland message) before pushing. A push of a test-mock tweak or a two-line wording edit is unacceptable.
-- Never run destructive git commands (`checkout`, `stash`, `reset`, `clean`) or revert/overwrite files without checking contents first — unless explicitly asked.
-- Shell gotcha (Windows/PowerShell): never put `$(...)` in a double-quoted git commit message — the shell command-substitutes it and silently corrupts the message. Use single quotes.
+13. **Never change a version number without explicit approval.** The owner dictates versions.
+14. **A version number says nothing about releases.** `-rcN` means internal work: not shipped, not published, history still editable (untagged = draft, and squashing a draft is hygiene). Never conclude from a version string that something was released, and never propose publishing because one exists.
 
-## Version and release law
+## 4 Changelogs
 
-- **Never change a version number without explicit approval.** The owner dictates version changes.
-- **A version number says NOTHING about releases.** A `-rcN` in the manifest means: internal work, NOT shipped, NOT published, history still editable (untagged = draft, squashing a draft is hygiene). Never conclude from any version that something "was released"; never propose publish/announce actions because a version exists.
+15. **If no user ever saw it, it never happened.** `Fixed` entries describe issues experienced in a shipped version. A bug introduced and fixed inside one unreleased cycle is work in progress: no entry.
+16. **Never compare against never-shipped intermediate behavior** ("during this rc, X used to happen"). Same law: it never happened.
+17. **New features get entries; internal refactors do not.**
+18. **Intent before content.** One short paragraph under the version heading says why the release exists; the entries follow. State the why once, not per entry.
+19. Terse changelog for humans; verbose commit message for the next reader.
 
-## Changelog epistemology
+## 5 Review governance
 
-- **If no user ever saw it, it never happened.** Only issues experienced in a SHIPPED version get `Fixed` entries. Bugs introduced and fixed within one unreleased cycle are work-in-progress, not news — no entry, ever.
-- **Never compare against never-shipped intermediate behavior** ("before, during this rc, X happened"). Same law: it never happened.
-- **New features deserve entries; internal refactors do not.**
-- **Intent before content.** A release gets a short intent paragraph under the version heading (why it exists) before the entries. Major changes state their goal first, then the change as consequence. State the why once; don't restate it per entry.
-- Terse changelog (for humans); verbose commit messages (for AIs).
+20. **Issue ledgers hold live findings only.** A fixed finding loses its entry in the same commit. No status sections, no "fixed by" annotations, no archives: git holds what was done.
+21. **Standing rulings are permanent law.** Accepted decisions, deliberate asymmetries and owner-waived findings stay visible in the ledger or the instructions file. Before re-proposing a rejected shape, check whether it was ruled.
+22. **A review report — including your own — is a hypothesis.** Verify every claim against the bytes before acting on it.
+23. **"Could be one helper" is not "should be one helper."** Re-read hostilely; most first-pass structural findings die there. Review a full method with the `Structural Review` agent.
+24. **During a review, edit nothing.** Record findings, the owner rules on each, accepted changes execute as one coherent unit.
 
-## Review governance
+## 6 Verification
 
-- Issue ledgers track **live findings only**. Fixed finding → delete its entry in the same commit. No status sections, no "fixed by" annotations, no archives: git history holds what was done, and nobody reads accomplishment logs.
-- **Standing rulings are permanent law.** Accepted product decisions, deliberate asymmetries, and owner-waived findings stay visible in the ledger or instructions file so the same shapes never get re-proposed. When in doubt whether something was ruled before — it probably was; check.
-- **A reviewer's report — including your own — is a hypothesis.** Verify every published claim against the bytes before acting on it, including another agent's roast of the tooling.
-- **"Could be one helper" is not "should be one helper."** Most first-pass structural findings die on hostile re-read. For a full method, use the `Structural Review` agent.
-- During reviews, nothing gets edited: findings are recorded, the user rules on each, accepted changes execute as one coherent unit.
+25. **Verify with the real pipeline.** The build that produces the artifact is the only build that matters: a config or flag change needs the full package build, not compile plus test.
+26. **Check your own work:** review your diff, run the linter, run the tests.
+27. **Tests are tripwires for real breakage** — wire formats, persistence writes, lifecycle — not a coverage metric. No ceremony tests. When a refactor breaks a test seam, structure wins: reroute the test, or replace it with a read-and-reason review.
+28. **A grep proves the words are gone, not the behavior.** Dead branches hide in copies carrying none of the grepped words; verify by reading.
+29. **Report unrelated issues you notice,** including outside the task's scope.
 
-## Verification laws
+## 7 Simplicity
 
-- **Verify with the real pipeline, not the subset you happen to know.** The build that produces the artifact is the only build that matters. A tsconfig/flag change must run the FULL package build — checking only compile+test once shipped a release candidate that failed its own build.
-- **Check your work**: review your own diff, run the linter, run the tests.
-- Tests exist as **tripwires for real breakage** (wire formats, persistence writes, lifecycle) — no coverage metric, no ceremony tests. When a refactor breaks a test seam, structure wins: reroute the test or replace it with read-and-reason review.
-- **A grep proves the words are gone, not the behavior.** Dead branches hide in copies carrying none of the grepped words; verify by reading.
-- Point out unrelated issues you notice, even outside the task's scope. Proactive feedback beats silence.
+30. **Deleting code beats adding code, and no existing code is exempt.** Before writing, ask what the code is for and whether the approach is needed at all.
+31. Prefer fewer files, fewer functions, fewer lines.
+32. **Every named thing must earn its name:** large, or at least two production callers (the `Structural Review` agent's rent law).
+33. **Fix the root cause,** usually by deleting the broken layer. No workarounds stacked on workarounds.
+34. **After three edits on one problem, stop.** Re-read the original goal and propose a simpler path.
+35. **Ask when the purpose is unclear.** Every line should serve a user-facing feature.
+36. **No guards against almost-impossible situations.** Short but correct beats elaborate.
 
-## Simplicity laws
+## 8 Knowledge placement
 
-- **Deleting code is better than adding code.** No code is sacred. Question necessity before writing: what is the purpose, is this approach actually needed?
-- Prefer fewer files, fewer functions, fewer lines. Every named thing must earn its name (large, or ≥2 production callers — see the Structural Review agent's rent law).
-- Don't build workarounds on top of workarounds. Fix the root cause — often by deleting the problematic code entirely.
-- **After three or more edits for one problem, stop.** Re-read the original goal and propose a simpler path.
-- If the higher purpose is unclear, ask. Every line should serve a user-facing feature.
-- Avoid guards against almost-impossible situations. Focus on likely scenarios; short but correct beats elaborate.
+37. **Durable facts belong in repo-visible docs, not AI session memory:** field-tested API facts, build gotchas, standing rulings.
+38. **Update the docs your change affects** (README, changelog, ledgers). A project's user settings and config are not part of the codebase — never paste secrets or hostnames into the repo.
 
-## Knowledge placement
+## 9 Communication
 
-- **Durable facts belong in repo-visible docs, not AI session memory.** Field-tested API facts, build gotchas, and standing rulings go into the instructions file or a `docs/` file; an assistant's private memory is a cache with the bus factor of one model instance.
-- Update docs affected by your changes (README, changelog, ledgers). The user settings/config of a project are not part of the codebase — never paste secrets or hostnames into the repo.
+39. Be brief. Detail only where it changes a decision or a debugging step.
+40. Summarize when done: what changed, why, which assumptions were made.
+41. Ask when ambiguous. **Contradict the owner** when you believe they are wrong — direct, not deferential.
 
-## Communication
+## 10 Vendoring
 
-- Be brief. Details only where they matter for decisions or debugging.
-- Summarize when done: what changed, why, which assumptions were made.
-- Ask when ambiguous — don't guess.
-- **Contradict the owner** when you believe they are wrong. Direct, not deferential.
+42. **Order is fixed: commit upstream → run `bin/sync` → commit downstream.** `sync` copies the upstream *working tree* and stamps the upstream `HEAD` sha into the vendored file. Sync before committing upstream and you ship the previous revision's law, or you ship uncommitted edits under a stamp whose commit does not contain them. Before syncing, require `git -C <upstream> status --porcelain` to be empty; after syncing, diff the vendored copy.
