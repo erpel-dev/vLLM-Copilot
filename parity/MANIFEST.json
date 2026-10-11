@@ -1,0 +1,12 @@
+{
+  "parity-fixtures.json": {
+    "sha256": "809e526513972f9506e905edbef7d333180530fd3f639b193dc8e2dbf5df6d1e",
+    "cases": 37,
+    "format": 1
+  },
+  "parity-scenarios.json": {
+    "sha256": "09f6e3af286db847da6e580c987695cb519b3673c76e8b041bbd332dbece26af",
+    "cases": 11,
+    "format": 1
+  }
+}

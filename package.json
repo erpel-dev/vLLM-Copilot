@@ -652,6 +652,7 @@
     "core:decl": "tsc -p tsconfig.core.json",
     "core:api": "node scripts/core-api-surface.mjs",
     "core:proof": "node scripts/core-proof.mjs",
+    "parity:export": "node scripts/parity-export.mjs",
     "watch": "tsc -watch -p ./",
     "test": "vitest run",
     "test:typecheck": "tsc -p test/tsconfig.json --noEmit",

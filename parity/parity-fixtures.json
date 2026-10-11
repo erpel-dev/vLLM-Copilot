@@ -1,0 +1,259 @@
+{
+  "format": 1,
+  "oracle": "src/core/request/sseParser.ts::parseToolCallArgs",
+  "note": "Pinned VALUE, not tier label (gateway tiers are its own honest account). null = unparseable: the extension returns null, the gateway reports Unparseable.",
+  "cases": [
+    {
+      "input": "",
+      "expect": {}
+    },
+    {
+      "input": "{}",
+      "expect": {}
+    },
+    {
+      "input": "{\"path\":\"foo.ts\"}",
+      "expect": {
+        "path": "foo.ts"
+      }
+    },
+    {
+      "input": "{\"a\": 1, \"b\": 2}",
+      "expect": {
+        "a": 1,
+        "b": 2
+      }
+    },
+    {
+      "input": "{ path: 'foo.ts', nested: { arr: [1, 2,], } }",
+      "expect": {
+        "path": "foo.ts",
+        "nested": {
+          "arr": [
+            1,
+            2
+          ]
+        }
+      }
+    },
+    {
+      "input": "{ cmd: 'ls', flag: True, none: None }",
+      "expect": {
+        "cmd": "ls",
+        "flag": true,
+        "none": null
+      }
+    },
+    {
+      "input": "{ 'msg': 'she said \"hi\"' }",
+      "expect": {
+        "msg": "she said \"hi\""
+      }
+    },
+    {
+      "input": "{\"a\": 1 \"b\": 2}",
+      "expect": {
+        "a": 1,
+        "b": 2
+      }
+    },
+    {
+      "input": "{\"a\": [1, 2,],}",
+      "expect": {
+        "a": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "input": "{\"n\": 12.}",
+      "expect": {
+        "n": 12
+      }
+    },
+    {
+      "input": "{ \"x\": NaN, \"y\": Infinity, \"z\": undefined }",
+      "expect": {
+        "x": "NaN",
+        "y": "Infinity",
+        "z": null
+      }
+    },
+    {
+      "input": "{ greeting: hello }",
+      "expect": {
+        "greeting": "hello"
+      }
+    },
+    {
+      "input": "{key: [value1, value2]}",
+      "expect": {
+        "key": [
+          "value1",
+          "value2"
+        ]
+      }
+    },
+    {
+      "input": "{message: hello world}",
+      "expect": {
+        "message": "hello world"
+      }
+    },
+    {
+      "input": "{tags: [hello world]}",
+      "expect": {
+        "tags": [
+          "hello world"
+        ]
+      }
+    },
+    {
+      "input": "{\"a\":",
+      "expect": {
+        "a": null
+      }
+    },
+    {
+      "input": "{\"a\":, \"b\":2}",
+      "expect": {
+        "a": null,
+        "b": 2
+      }
+    },
+    {
+      "input": "{\"text\":\"emoji \\ud83d\\ude00\",}",
+      "expect": {
+        "text": "emoji 😀"
+      }
+    },
+    {
+      "input": "{\"a\":1,,}",
+      "expect": {
+        "a": 1
+      }
+    },
+    {
+      "input": "{ , }",
+      "expect": {}
+    },
+    {
+      "input": "{\"k\":\"v\" ",
+      "expect": {
+        "k": "v"
+      }
+    },
+    {
+      "input": "{\"k\": \"v\",}",
+      "expect": {
+        "k": "v"
+      }
+    },
+    {
+      "input": "{\"path\":\"/foo",
+      "expect": {
+        "path": "/foo"
+      }
+    },
+    {
+      "input": "{\"path\":\"foo.ts\",\"content\":\"def hello():\n    print(",
+      "expect": {
+        "path": "foo.ts",
+        "content": "def hello():\n    print("
+      }
+    },
+    {
+      "input": "{\"broken\": {\"inner\": [{\"x\"",
+      "expect": {
+        "broken": {
+          "inner": [
+            {
+              "x": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "input": "{\"a\": [1, [2, [3,",
+      "expect": {
+        "a": [
+          1,
+          [
+            2,
+            [
+              3
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "input": "[1,2]",
+      "expect": null
+    },
+    {
+      "input": "42",
+      "expect": null
+    },
+    {
+      "input": "null",
+      "expect": null
+    },
+    {
+      "input": "true",
+      "expect": null
+    },
+    {
+      "input": "\"a string\"",
+      "expect": null
+    },
+    {
+      "input": "'single'",
+      "expect": null
+    },
+    {
+      "input": "{\"text\": \"caf\\u00e9 \\ud55c\"}",
+      "expect": {
+        "text": "café 한"
+      }
+    },
+    {
+      "input": "{\"text\": \"emoji \\ud83d\\ude00\"}",
+      "expect": {
+        "text": "emoji 😀"
+      }
+    },
+    {
+      "input": "{\"multi\": \"line\nbreak\"}",
+      "expect": {
+        "multi": "line\nbreak"
+      }
+    },
+    {
+      "input": "\u0000\u0001\u0002",
+      "expect": null
+    },
+    {
+      "input": "{\"a\": {\"b\": {\"c\": [1, {\"d\": [true, {\"e\": \"f\"}]}]}}}",
+      "expect": {
+        "a": {
+          "b": {
+            "c": [
+              1,
+              {
+                "d": [
+                  true,
+                  {
+                    "e": "f"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,511 @@
+{
+  "format": 1,
+  "oracle": "ChatTransport + executeChatRequest",
+  "note": "Single-choice deterministic scenarios with fixed tool IDs. Times and accounting records are excluded.",
+  "cases": [
+    {
+      "name": "clean",
+      "serverType": "vllm",
+      "attempts": [
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"answer\"}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: {\"choices\":[],\"usage\":{\"prompt_tokens\":3,\"completion_tokens\":2,\"total_tokens\":5}}\n\ndata: [DONE]\n\n"
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          }
+        ],
+        "response": {
+          "content": "answer",
+          "reasoning": "",
+          "toolCalls": [],
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 3,
+            "completion_tokens": 2,
+            "total_tokens": 5
+          }
+        }
+      }
+    },
+    {
+      "name": "empty-nudge",
+      "serverType": "vllm",
+      "attempts": [
+        "data: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n\n",
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"answer\"}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: {\"choices\":[],\"usage\":{\"prompt_tokens\":3,\"completion_tokens\":2,\"total_tokens\":5}}\n\ndata: [DONE]\n\n"
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          },
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              },
+              {
+                "role": "assistant",
+                "content": ""
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          }
+        ],
+        "response": {
+          "content": "answer",
+          "reasoning": "",
+          "toolCalls": [],
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 3,
+            "completion_tokens": 2,
+            "total_tokens": 5
+          }
+        }
+      }
+    },
+    {
+      "name": "colon-continuation",
+      "serverType": "vllm",
+      "attempts": [
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"Steps:\"}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n\n",
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"answer\"}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: {\"choices\":[],\"usage\":{\"prompt_tokens\":3,\"completion_tokens\":2,\"total_tokens\":5}}\n\ndata: [DONE]\n\n"
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          },
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              },
+              {
+                "role": "assistant",
+                "content": "Steps:"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            },
+            "continue_final_message": true,
+            "add_generation_prompt": false
+          }
+        ],
+        "response": {
+          "content": "Steps:answer",
+          "reasoning": "",
+          "toolCalls": [],
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 3,
+            "completion_tokens": 2,
+            "total_tokens": 5
+          }
+        }
+      }
+    },
+    {
+      "name": "silent-error-replay",
+      "serverType": "vllm",
+      "attempts": [
+        "data: {\"error\":{\"message\":\"retry me\"}}\n\n",
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"answer\"}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: {\"choices\":[],\"usage\":{\"prompt_tokens\":3,\"completion_tokens\":2,\"total_tokens\":5}}\n\ndata: [DONE]\n\n"
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          },
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          }
+        ],
+        "response": {
+          "content": "answer",
+          "reasoning": "",
+          "toolCalls": [],
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 3,
+            "completion_tokens": 2,
+            "total_tokens": 5
+          }
+        }
+      }
+    },
+    {
+      "name": "non-vllm-colon",
+      "serverType": "openrouter",
+      "attempts": [
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"Steps:\"}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n\n"
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          }
+        ],
+        "response": {
+          "content": "Steps:",
+          "reasoning": "",
+          "toolCalls": [],
+          "finishReason": "stop",
+          "usage": null
+        }
+      }
+    },
+    {
+      "name": "openrouter-stripping",
+      "serverType": "openrouter",
+      "attempts": [
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"answer\"}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: {\"choices\":[],\"usage\":{\"prompt_tokens\":3,\"completion_tokens\":2,\"total_tokens\":5}}\n\ndata: [DONE]\n\n"
+      ],
+      "options": {
+        "continue_final_message": true,
+        "add_generation_prompt": false
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          }
+        ],
+        "response": {
+          "content": "answer",
+          "reasoning": "",
+          "toolCalls": [],
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 3,
+            "completion_tokens": 2,
+            "total_tokens": 5
+          }
+        }
+      }
+    },
+    {
+      "name": "ollama-stripping",
+      "serverType": "ollama",
+      "attempts": [
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"answer\"}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: {\"choices\":[],\"usage\":{\"prompt_tokens\":3,\"completion_tokens\":2,\"total_tokens\":5}}\n\ndata: [DONE]\n\n"
+      ],
+      "options": {
+        "continue_final_message": true,
+        "add_generation_prompt": false,
+        "tool_choice": "auto"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          }
+        ],
+        "response": {
+          "content": "answer",
+          "reasoning": "",
+          "toolCalls": [],
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 3,
+            "completion_tokens": 2,
+            "total_tokens": 5
+          }
+        }
+      }
+    },
+    {
+      "name": "fragmented-tool",
+      "serverType": "vllm",
+      "attempts": [
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_probe\",\"type\":\"function\",\"function\":{\"name\":\"read\",\"arguments\":\"{\\\"path\\\":\"}}]}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"\\\"file\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}]}\n\ndata: [DONE]\n\n"
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          }
+        ],
+        "response": {
+          "content": "",
+          "reasoning": "",
+          "toolCalls": [
+            {
+              "id": "call_probe",
+              "name": "read",
+              "arguments": "{\"path\":\"file\"}"
+            }
+          ],
+          "finishReason": "tool_calls",
+          "usage": null
+        }
+      }
+    },
+    {
+      "name": "empty-tool",
+      "serverType": "vllm",
+      "attempts": [
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_empty\",\"type\":\"function\",\"function\":{\"name\":\"list\",\"arguments\":\"\"}}]}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"tool_calls\"}]}\n\ndata: [DONE]\n\n"
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          }
+        ],
+        "response": {
+          "content": "",
+          "reasoning": "",
+          "toolCalls": [
+            {
+              "id": "call_empty",
+              "name": "list",
+              "arguments": "{}"
+            }
+          ],
+          "finishReason": "tool_calls",
+          "usage": null
+        }
+      }
+    },
+    {
+      "name": "clean-eof",
+      "serverType": "vllm",
+      "attempts": [
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"tail\"}}]}"
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          }
+        ],
+        "response": {
+          "content": "tail",
+          "reasoning": "",
+          "toolCalls": [],
+          "finishReason": null,
+          "usage": null
+        }
+      }
+    },
+    {
+      "name": "reasoning-alias",
+      "serverType": "vllm",
+      "attempts": [
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"answer\",\"reasoning_content\":\"thought\"}}]}\n\ndata: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n\n"
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi"
+        }
+      ],
+      "expect": {
+        "requests": [
+          {
+            "model": "wire-model",
+            "messages": [
+              {
+                "role": "user",
+                "content": "hi"
+              }
+            ],
+            "stream": true,
+            "stream_options": {
+              "include_usage": true
+            }
+          }
+        ],
+        "response": {
+          "content": "answer",
+          "reasoning": "thought",
+          "toolCalls": [],
+          "finishReason": "stop",
+          "usage": null
+        }
+      }
+    }
+  ]
+}
