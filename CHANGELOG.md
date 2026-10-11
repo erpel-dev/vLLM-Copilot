@@ -1,15 +1,11 @@
 # Changelog
 
 ## v1.37.2
-Copilot redesigned the model picker, and this release makes the new layout survivable: a one-time explainer shows users where the models and the menus live, and the escape from hidden menus — running the chat on **Local** — is now said out loud wherever the problem is mentioned.
+Copilot redesigned the model picker, and this release makes the new layout survivable: one one-time explainer shows where the models and the menus live and why the chat must run on **Local** — including for users who saw the narrower v1.37.1 notice, which it replaces.
 
 ### Added
 
-- **A one-time explainer for the new model picker.** Your models are under the **vLLM-Copilot** tab behind the model chip in the chat input; Model Mode and Output Length are chips on each model's row; the session selector must stay on **Local**. One click opens the annotated picture in the README. Shown once, never again.
-
-### Changed
-
-- **The Agent Host note now names the escape.** It tells you to switch the chat back to **Local** in its session dropdown to get your menus back and offers the annotated README picture; installs that saw the old one-liner hear the update once.
+- **A one-time explainer for the new model picker.** In one line: switch the chat to **Local** and pick your model under the **vLLM-Copilot** tab. One click opens the annotated picture in the README. Shown once, never again; it also reaches installs that already saw the v1.37.1 Agent Host note, replacing that note so nobody is told twice.
 
 ### Known Issue
 

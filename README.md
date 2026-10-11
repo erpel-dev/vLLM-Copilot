@@ -16,6 +16,18 @@ GitHub Copilot provides the familiar chat, tools, and model picker; you provide 
 
 <div align="center">
 
+<a id="new-ui"></a>
+Microsoft decided to make life difficult for all of us, introducing features nobody wanted. This means that the ui for selecting the local model from vllm-copilot has changed. It now works like this:
+<a href="https://github.com/fuzzifikation/vLLM-Copilot/raw/main/docs/images/Howto-use-the-new-UI.png">
+<img src="https://github.com/fuzzifikation/vLLM-Copilot/raw/main/docs/images/Howto-use-the-new-UI.png" width="560" alt="How to use the new Copilot model picker: the circled vLLM-Copilot provider tab at the top, a pinned model with its Think (Deep) and 16K chips, and the circled Local session selector at the bottom left of the chat input">
+</a>
+
+<em><strong>How to use the new Copilot UI:</strong> switch the chat to <strong>Local</strong> (bottom left of the chat input) and pick your model under the circled <strong>vLLM-Copilot</strong> tab — the top tab when the picker opens. Mode and output length are the chips on each model's row; on an Agent Host session VS Code hides them.</em>
+
+</div>
+
+<div align="center">
+
 **Video guides**
 *thank you for 1k downloads!*
 <table>
@@ -28,13 +40,6 @@ GitHub Copilot provides the familiar chat, tools, and model picker; you provide 
 <td align="center"><a href="https://www.youtube.com/watch?v=m9sAsLGscCQ&list=PLX5fAAeBRJkg&index=4"><img src="https://img.youtube.com/vi/m9sAsLGscCQ/maxresdefault.jpg" width="280" alt="vllm-Copilot: 4. OpenRouter Integration (6:22)"></a><br><a href="https://www.youtube.com/watch?v=m9sAsLGscCQ&list=PLX5fAAeBRJkg&index=4">4. OpenRouter Integration (6:22)</a></td>
 </tr>
 </table>
-
-<a id="new-ui"></a>
-<a href="https://github.com/fuzzifikation/vLLM-Copilot/raw/main/docs/images/Howto-use-the-new-UI.png">
-<img src="https://github.com/fuzzifikation/vLLM-Copilot/raw/main/docs/images/Howto-use-the-new-UI.png" width="560" alt="How to use the new Copilot model picker: the circled vLLM-Copilot provider tab at the top, a pinned model with its Think (Deep) and 16K chips, and the circled Local session selector at the bottom left of the chat input">
-</a>
-
-<em><strong>How to use the new Copilot UI:</strong> open the model picker from the model chip in the chat input, choose the circled <strong>vLLM-Copilot</strong> tab for your models, and keep the circled session selector at the bottom left on <strong>Local</strong> — on an Agent Host session VS Code hides Model Mode and Output Length. Mode and output length are the chips on each model's row.</em>
 
 </div>
 

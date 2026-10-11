@@ -8,7 +8,6 @@ import {
   registerConfigureUtilityModelCommand,
   ensureByokUtilityDefault,
   ensureAgentHostModelsEnabled,
-  maybeShowAgentHostNotice,
   maybeShowNewPickerNotice,
 } from './vscode/commands/byok.js';
 import { setSessionManagerOutput } from './vscode/copilot/sessionManager.js';
@@ -281,15 +280,10 @@ export async function activate(context: vscode.ExtensionContext) {
       outputChannel.appendLine(`[WARN] Output length migration offer failed: ${err}`);
     });
 
-    // One-time heads-up that Agent Host sessions hide our picker UI (menus,
-    // icon, price line) — VS Code renders its own bridge copy there. Fire-and-
-    // forget like the migration above; it records itself as seen before showing.
-    maybeShowAgentHostNotice(context).catch(err => {
-      outputChannel.appendLine(`[WARN] Agent Host notice failed: ${err}`);
-    });
-
-    // One-time explainer for the redesigned Copilot model picker (where the
-    // models are, where the menus moved, why "Local"). Same never-nag pattern.
+    // One-time explainer for the redesigned Copilot model picker: switch to
+    // "Local", pick the model under the vLLM-Copilot tab, README for the rest.
+    // The only startup notice; supersedes the v1.37.1 Agent Host heads-up.
+    // Never-nag pattern: records itself as seen before showing.
     maybeShowNewPickerNotice(context).catch(err => {
       outputChannel.appendLine(`[WARN] New picker notice failed: ${err}`);
     });
