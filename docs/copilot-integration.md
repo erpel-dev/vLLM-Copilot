@@ -395,6 +395,15 @@ The model **hover** card mirrors this: `SUPPORTED_CONFIG_GROUPS = ['navigation',
 - If the schema has no properties with enum of 2+ values, `getModelConfigurationActions()` returns `[]` and nothing shows in UI
 - The `modelConfiguration` property on `options` is also not in `@types/vscode` - must be accessed via `(options as any).modelConfiguration`
 
+### Provider Tab Icons in the Tabbed Model Picker (verified against VS Code source 2026-10-11)
+
+**An extension cannot set the icon of its provider tab.** The tabbed picker renders one tab per provider; where each icon comes from, verified in `microsoft/vscode` `main`:
+
+- The `languageModelChatProviders` contribution-point schema (`languageModels.ts`, `languageModelChatProviderType`) accepts exactly `vendor`, `displayName`, `configuration`, `managementCommand` (deprecated), `deprecation`, `when`. There is **no `icon` field**.
+- `modelPickerTabs.ts::buildModelPickerDestinations` builds each user-provider tab with `icon: getProviderIconForIdentity(entry.label)` - a case-insensitive **substring match on the provider display name** (`modelProviderIcons.ts`): grok/xai, claude/anthropic, gemini/google, kimi/moonshot, microsoft/mai, openai/chatgpt/gpt/codex/o1-o4, then `copilot`, else the generic sparkle. There is no extension-supplied input anywhere in that path.
+- Our tab shows the **Copilot robot purely because `displayName` "vLLM-Copilot" contains the substring "copilot"** and Microsoft's hardcoded heuristic hands us their brand. Renaming `displayName` (e.g. to `vLLM`) changes the tab icon only to the generic sparkle - never to our V.
+- `statusIcon` on the model info affects **model rows and the compact trigger chip only** (`modelProviderIcons.ts::getModelPickerIcon` = `metadata.statusIcon ?? providerIcon`). That is why our model rows carry the V glyph while the tab carries a robot. Also note `getModelProviderIcon` returns the generic icon for any `isBYOK` model before name matching - our `statusIcon` is what overrides that.
+
 ### `provideTokenCount`: Cold-Start Latency from `context.secrets.get()`
 
 **Problem:** First prompt after VS Code restart took ~20 seconds. Subsequent prompts were instant.

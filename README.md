@@ -28,6 +28,14 @@ GitHub Copilot provides the familiar chat, tools, and model picker; you provide 
 <td align="center"><a href="https://www.youtube.com/watch?v=m9sAsLGscCQ&list=PLX5fAAeBRJkg&index=4"><img src="https://img.youtube.com/vi/m9sAsLGscCQ/maxresdefault.jpg" width="280" alt="vllm-Copilot: 4. OpenRouter Integration (6:22)"></a><br><a href="https://www.youtube.com/watch?v=m9sAsLGscCQ&list=PLX5fAAeBRJkg&index=4">4. OpenRouter Integration (6:22)</a></td>
 </tr>
 </table>
+
+<a id="new-ui"></a>
+<a href="https://github.com/fuzzifikation/vLLM-Copilot/raw/main/docs/images/Howto-use-the-new-UI.png">
+<img src="https://github.com/fuzzifikation/vLLM-Copilot/raw/main/docs/images/Howto-use-the-new-UI.png" width="560" alt="How to use the new Copilot model picker: the circled vLLM-Copilot provider tab at the top, a pinned model with its Think (Deep) and 16K chips, and the circled Local session selector at the bottom left of the chat input">
+</a>
+
+<em><strong>How to use the new Copilot UI:</strong> open the model picker from the model chip in the chat input, choose the circled <strong>vLLM-Copilot</strong> tab for your models, and keep the circled session selector at the bottom left on <strong>Local</strong> — on an Agent Host session VS Code hides Model Mode and Output Length. Mode and output length are the chips on each model's row.</em>
+
 </div>
 
 ## Description
@@ -100,7 +108,7 @@ If you want to support this work: [![Sponsor via PayPal](https://img.shields.io/
 3. **Add your vLLM server & model:** *(same for llama.cpp, lm-studio, ollama)* in the Dashboard, click **Add or Reconfigure Server/Model** at the bottom of the tree → enter your server URL → *(optional) enter vLLM API key and HTTP request headers from IT* → pick a model → done. The extension auto-configures the model (family, capabilities, context window) from curated presets (bundled, and refreshed live from GitHub when online) or HuggingFace.
 4. **Edit settings** *(optional)*: open the **Model Settings** view (below the Dashboard) to adjust displayName, params, model modes, and more. No `settings.json` editing required.
 5. **Change the personality** *(optional)*: in **Model Settings**, pick a model and choose a personality from the dropdown in its **General** section (or `Ctrl+Shift+P` → **Set Model Personality**). Pick **Default (no personality)** later to clear it.
-6. **Chat:** Open Copilot Chat, pick your model from the dropdown. Switch modes, and where a model defines lengths also the output length, from the same picker.
+6. **Chat:** Open Copilot Chat — [the picture at the top](#new-ui) shows all of this in one look. The chat input's bottom bar carries the **model chip** — the model name plus its `Mode · Length` readout, e.g. `Think (Deep) · 16K`. Click it to open the model picker: the tabs up top are **providers**. The left tab holds Copilot's own models; the **vLLM-Copilot** tab is yours, with pinned models on top. Pick a model, switch mode and output length from the chip on its row. Only the model rows and the chip carry our **V** glyph — the tab icon is VS Code's own choice. **Check the session selector at the bottom left reads "Local":** on an Agent Host session VS Code swaps in its own copy of your models and hides the **Model Mode** and **Output Length** menus (see [Known Issues](#known-issues)).
 
 </td></tr>
 </table>
@@ -382,7 +390,7 @@ The full command list, including auth rotation, model/server removal, log tools,
 
 ## Known Issues
 
-**Agent Host sessions hide the model menus.** When a chat runs on an Agent Host session (the Copilot CLI harness — including a Local chat that restoring the conversation moved onto it), the picker shows VS Code's own copy of your models instead of the one this extension published. That copy keeps the token budgets and capabilities but drops the **Model Mode** and **Output Length** submenus, the model icon and the price line. Your saved values are still applied to every request — change them under **Manage Models…**, or start a new chat to get the full entry back. Upstream: [microsoft/vscode#340138](https://github.com/microsoft/vscode/issues/340138).
+**Agent Host sessions hide the model menus.** When a chat runs on an Agent Host session (the Copilot CLI harness — including a Local chat that restoring the conversation moved onto it), the picker shows VS Code's own copy of your models instead of the one this extension published. That copy keeps the token budgets and capabilities but drops the **Model Mode** and **Output Length** submenus, the model icon and the price line. Switch the chat back to **Local** in its session dropdown, or start a new chat, to get your entry with its menus back. Your saved values are still applied to every request; to change one meanwhile use **Manage Models…**. Upstream: [microsoft/vscode#340138](https://github.com/microsoft/vscode/issues/340138).
 
 ---
 

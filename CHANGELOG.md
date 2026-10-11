@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.37.2
+Copilot redesigned the model picker, and this release makes the new layout survivable: a one-time explainer shows users where the models and the menus live, and the escape from hidden menus — running the chat on **Local** — is now said out loud wherever the problem is mentioned.
+
+### Added
+
+- **A one-time explainer for the new model picker.** Your models are under the **vLLM-Copilot** tab behind the model chip in the chat input; Model Mode and Output Length are chips on each model's row; the session selector must stay on **Local**. One click opens the annotated picture in the README. Shown once, never again.
+
+### Changed
+
+- **The Agent Host note now names the escape.** It tells you to switch the chat back to **Local** in its session dropdown to get your menus back and offers the annotated README picture; installs that saw the old one-liner hear the update once.
+
+### Known Issue
+
+- **Model Mode and Output Length disappear in Agent Host sessions (VS Code bug, not ours).** A chat running on an Agent Host session — the Copilot CLI harness, including a Local chat that reopening the conversation moved onto it — shows your models without the **Model Mode** and **Output Length** submenus, without their model icon, and without the price line. VS Code substitutes its own entry for the model there and leaves our settings menus out of it. What you configured is still sent with every request. Switch the chat back to **Local** in its session dropdown, or start a new chat, to get the normal entry back; to change a setting meanwhile use **Manage Models…**. Reported upstream as [microsoft/vscode#340138](https://github.com/microsoft/vscode/issues/340138). Until Microsoft fixes it there, there is nothing this extension can do.
+
 ## v1.37.1
 One reason to install this: VS Code hides your Model Mode and Output Length menus in Agent Host sessions, and this release makes sure you hear the why from us instead of from a bug report. Nothing else about how the extension behaves changed.
 

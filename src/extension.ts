@@ -9,6 +9,7 @@ import {
   ensureByokUtilityDefault,
   ensureAgentHostModelsEnabled,
   maybeShowAgentHostNotice,
+  maybeShowNewPickerNotice,
 } from './vscode/commands/byok.js';
 import { setSessionManagerOutput } from './vscode/copilot/sessionManager.js';
 import { syncBundledPersonalities, migratePersonalityPathRefs } from './vscode/state/personalityStore.js';
@@ -285,6 +286,12 @@ export async function activate(context: vscode.ExtensionContext) {
     // forget like the migration above; it records itself as seen before showing.
     maybeShowAgentHostNotice(context).catch(err => {
       outputChannel.appendLine(`[WARN] Agent Host notice failed: ${err}`);
+    });
+
+    // One-time explainer for the redesigned Copilot model picker (where the
+    // models are, where the menus moved, why "Local"). Same never-nag pattern.
+    maybeShowNewPickerNotice(context).catch(err => {
+      outputChannel.appendLine(`[WARN] New picker notice failed: ${err}`);
     });
 
     // Expose the model-entry schema to Copilot Chat as an on-demand LM tool so
