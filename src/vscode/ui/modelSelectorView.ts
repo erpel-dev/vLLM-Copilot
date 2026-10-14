@@ -861,7 +861,7 @@ function buildHtml(webview: vscode.Webview, scriptUri: vscode.Uri, styleUri: vsc
     <label class="chk"><input id="cb-free" type="checkbox" checked> free variants</label>
     <label class="chk"><input id="cb-batch" type="checkbox"> batch variants</label>
     <input id="q" type="text" placeholder="search all models…" spellcheck="false">
-    <button id="btn-refresh" title="Re-fetch benchmarks + catalog + provider lists">&#x21bb; Refresh</button>
+    <button id="btn-refresh">&#x21bb; Refresh</button>
   </section>
   <section id="chart-wrap"><div id="chart"></div></section>
   <section id="lower">

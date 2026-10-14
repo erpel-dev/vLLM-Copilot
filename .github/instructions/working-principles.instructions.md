@@ -1,14 +1,14 @@
 ---
 name: working-principles
-description: "How an AI coding partner must operate: intake and execution order, git/push discipline, version and release law, changelog epistemology, review governance, verification, simplicity, knowledge placement, communication. Always applies."
+description: "How an AI coding partner must operate: intake and execution order, git/push discipline, version and release law, changelog epistemology, review governance, verification, bug diagnosis, simplicity, knowledge placement, communication. Always applies."
 applyTo: "**"
 ---
 
-<!-- vendored from fuzzifikation/agents @ 0fdec24, synced 2026-10-10. Do not edit here: edit upstream and re-run bin/sync.ps1 -->
+<!-- vendored from fuzzifikation/agents @ 6abd25c, synced 2026-10-14. Do not edit here: edit upstream and re-run bin/sync.ps1 -->
 
 # Working Principles — AI Coding Partner Rules
 
-Operating rules, project-agnostic, numbered **WP1–WP42** so a citation cannot be confused with a rule of `text-style.instructions.md`. Numbers are append-only: downstream repos cite them. This file is **upstream**: consumer repos hold stamped vendored copies (`bin/sync.sh` / `bin/sync.ps1`) and never edit them here — edit upstream, re-sync downstream. Project-specific law lives in each repo's own `copilot-instructions.md`.
+Operating rules, project-agnostic, numbered **WP1–WP46** so a citation cannot be confused with a rule of `text-style.instructions.md`. Numbers are append-only: downstream repos cite them. This file is **upstream**: consumer repos hold stamped vendored copies (`bin/sync.sh` / `bin/sync.ps1`) and never edit them here — edit upstream, re-sync downstream. Project-specific law lives in each repo's own `copilot-instructions.md`.
 
 ## 1 Workflow
 
@@ -81,3 +81,10 @@ Operating rules, project-agnostic, numbered **WP1–WP42** so a citation cannot 
 ## 10 Vendoring
 
 42. **Order is fixed: commit upstream → run `bin/sync` → commit downstream.** `sync` copies the upstream *working tree* and stamps the upstream `HEAD` sha into the vendored file. Sync before committing upstream and you ship the previous revision's law, or you ship uncommitted edits under a stamp whose commit does not contain them. Before syncing, require `git -C <upstream> status --porcelain` to be empty; after syncing, diff the vendored copy.
+
+## 11 Bug diagnosis
+
+43. **No theory before a red-capable loop.** For a hard bug or a performance regression (a cause you can already point at needs no ceremony, per WP5), build **one command** that goes red on *this* bug and green once fixed, and run it before theorising: a test at the deepest honest seam, a script against a live server, a captured request or payload replayed in isolation, a `git bisect run` harness, or a differential old-versus-new run. It must be deterministic, seconds-fast and agent-runnable. Reading code to assemble a theory before that command exists is the failure this rule exists to prevent. When no loop can be built, say so, list what you tried, and ask for what is missing (environment access, a captured artifact such as a log dump or HAR, permission to add temporary instrumentation) instead of guessing.
+44. **Reproduce, then minimise.** The loop must go red on the symptom the *reporter* described, not on a nearby failure. Then cut inputs, callers, config, data and steps **one at a time**, re-running after each cut, until every remaining element is load-bearing (the shrunk repro is the smaller suspect list and the later regression test). A flaky bug earns no exemption: raise the reproduction rate until it is debuggable, by looping the trigger, adding stress or parallelising it. A performance regression gets a measurement baseline first and bisection second; logs are the wrong instrument.
+45. **Rank hypotheses and change one variable at a time.** Write 3–5 hypotheses before testing any, because a single one anchors on the first plausible idea. Each states a falsifiable prediction (`if <cause>, then <change Y> makes the bug vanish`, or `<change Z> makes it worse`), and one probe answers one prediction. Prefer a debugger or a breakpoint to ten log lines, and never log everything and grep. Tag temporary logs with a unique prefix so cleanup is one grep.
+46. **Lock the fix, or name the missing seam.** Turn the minimal repro into the regression test (WP27's tripwire) before applying the fix, and only where the test exercises the real call pattern; a seam too shallow to reproduce the chain that triggered the bug buys false confidence. Where no honest seam exists, the missing seam is itself the finding: raise it as a live structural issue (WP20's ledger), because the architecture is preventing the bug from being locked down. Then re-run the original un-minimised loop to green, remove the instrumentation, delete the throwaway harness, and name the winning hypothesis in the commit message so the next debugger inherits the cause instead of the patch.

@@ -4,8 +4,9 @@
 > `.github/instructions/working-principles.instructions.md` (upstream:
 > `fuzzifikation/agents`, re-sync with `G:\agents\bin\sync.ps1`). Git/push
 > discipline, version and release law, changelog epistemology, review
-> governance, verification laws, simplicity laws and communication style live
-> there and apply to every repo. **Everything below is this project only.**
+> governance, verification laws, bug-diagnosis law (WP43-46), simplicity laws and
+> communication style live there and apply to every repo. **Everything below is
+> this project only.**
 
 ---
 
