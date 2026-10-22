@@ -204,3 +204,31 @@ describe('Copilot SDK reasoning effort bridge', () => {
     }
   });
 });
+
+
+describe('OpenRouter SDK effort semantics', () => {
+  it('uses nested backend efforts even when display names disagree', () => {
+    const modelModes = {
+      'Think (Max)': { reasoning: { enabled: true, effort: 'max' } },
+      'Think (Minimal)': { reasoning: { enabled: true, effort: 'minimal' } },
+      'Think (High)': { reasoning: { enabled: true, effort: 'low' } },
+      Disabled: { reasoning: { enabled: false } },
+    };
+    const prop = buildConfigurationSchema({ modelModes })!.properties.reasoningEffort;
+    expect(prop.enum).toEqual(['max', 'minimal', 'low', 'none']);
+    const info = { configurationSchema: { properties: { reasoningEffort: prop } } };
+    for (const [index, name] of Object.keys(modelModes).entries()) {
+      expect(readPickerSelection({ modelConfiguration: { reasoningEffort: prop.enum[index] } }, info).selectedMode).toBe(name);
+    }
+  });
+
+  it('explains the SDK alias for provider-controlled reasoning without adding an effort', () => {
+    const prop = buildConfigurationSchema({ modelModes: {
+      Think: { reasoning: { enabled: true } },
+      'No Think': { reasoning: { enabled: false } },
+    } })!.properties.reasoningEffort;
+    expect(prop.enum).toEqual(['high', 'none']);
+    expect(prop.enumDescriptions[0]).toContain('backend defaults');
+    expect(prop.enumDescriptions[0]).toContain('does not select High effort');
+  });
+});

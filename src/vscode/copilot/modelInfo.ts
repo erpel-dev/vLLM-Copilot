@@ -166,8 +166,9 @@ function buildConfigurationSchema(
       if (values[index]) continue;
       const params = descriptor.override?.modelModes?.[name];
       const kwargs = params?.chat_template_kwargs as Record<string, unknown> | undefined;
-      const preferred = kwargs?.enable_thinking === false ? 'none'
-        : params?.reasoning_effort ?? kwargs?.reasoning_effort ?? kwargs?.reasoning_strength
+      const reasoning = params?.reasoning as Record<string, unknown> | undefined;
+      const preferred = reasoning?.enabled === false || kwargs?.enable_thinking === false ? 'none'
+        : reasoning?.effort ?? params?.reasoning_effort ?? kwargs?.reasoning_effort ?? kwargs?.reasoning_strength
           ?? (/no[ _-]?think/i.test(name) ? 'none'
             : /xhigh|deep/i.test(name) ? 'xhigh'
               : /balanced|medium|coding/i.test(name) ? 'medium'
@@ -190,6 +191,12 @@ function buildConfigurationSchema(
       title: 'Model Mode',
       enum: values,
       enumItemLabels: descriptor.modeNames,
+      enumDescriptions: names.map(name => {
+        const reasoning = descriptor.override?.modelModes?.[name]?.reasoning as Record<string, unknown> | undefined;
+        return reasoning?.enabled === true && reasoning.effort === undefined
+          ? 'Reasoning enabled using backend defaults or the configured token budget. The SDK label does not select High effort.'
+          : '';
+      }),
       default: values[names.indexOf(descriptor.defaultMode!)],
       group: 'navigation',
     };
